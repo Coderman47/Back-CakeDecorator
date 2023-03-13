@@ -1,6 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
-const router = require("./routes/routes.js");
+const router = require("./routes/index.js");
 const cors = require("cors");
 
 // Para leer data del .env
