@@ -17,7 +17,7 @@ module.exports = (sequelize) => {
       allowNull: false,
     },
     category: {
-      type: DataTypes.ENUM("Accesorios varios", "Cortantes", "Moldes circulares", "Picos", "Colorantes", "Pastas", "Tergopores"),
+      type: DataTypes.STRING,
       allowNull: false,
     },
     description: {
