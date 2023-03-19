@@ -30,10 +30,6 @@ module.exports = (sequelize) => {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
-      availableCourses: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
-        allowNull: false,
-      },
       img: {
         type: DataTypes.STRING,
         allowNull: true,
