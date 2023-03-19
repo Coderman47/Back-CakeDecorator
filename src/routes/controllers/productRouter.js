@@ -23,8 +23,7 @@ router.post("/", async (req, res) => {
     if (name && description && price && stock && img && category) {
       const createProduct = Product.create(req.body);
       res.status(200).send({
-        msg: `La categoria ${category} fue asignada satisfactoriamente`,
-        createProduct,
+        msg: `El producto ${name} fue creado satisfactoriamente`, 
       });
     } else {
       res.status(404).send({ error: "Faltan campos para crear producto" });

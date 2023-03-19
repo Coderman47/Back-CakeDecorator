@@ -1,4 +1,4 @@
-const { User } = require("../../db");
+const { User, Product } = require("../../db");
 
 const { Router } = require("express");
 const { Course } = require("../../db");
@@ -85,12 +85,44 @@ router.put("/", async (req, res) => {
   }
 });
 
-// let products = ["poner el ID del producto"]
+// let productBuyID = [
+//   "602cc6a5-cd2e-4384-ad84-b1039adb4575",
+//   "b48d333a-4c26-4593-a3b5-8a32aa11e2eb",
+// ];
 
-// router.put(("/buyProduct/:id", products), async (req, res) => {
-//   const idProduct = req.params.id
+router.put("/buyProducts/:id", async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const productsData = req.body;
+    // console.log("BODY", req.body);
+    const findUser = await User.findByPk(userId);
+    // console.log("USER", findUser);
+    // console.log("USER", findUser instanceof User)
+    const productsArray = await Product.findAll();
 
+    if (findUser) {
+      for (let i = 0; i < productsArray.length; i++) {
+        for (let j = 0; j < productsData.length; j++) {
+          if (productsArray[i].id === req.body[j].id) {
+            const [product, setProduct] = await Product.findOrCreate({
+              where: {
+                id: productsData[j].id,
+              },
+            });
+            product.addUser(findUser);
+          }
+        }
+      }
+      // FALTA INVESTIGAR PORQUE NO ME AGREGA EL ATRIBUTO EN
+      // USUARIOS Y PRODUCTO PARA VER LOS IDENTIFICADORES
+      // console.log("USUARIO FINAL", findUser);
+      res.status(200).send("Articulos agregados al usuario!");
+    } else {
+      res.status(404).send(`No se encontró usuario con ID ${userId}`);
+    }
+  } catch (error) {
+    res.status(404).send(error.message);
+  }
+});
 
-    
-// });
 module.exports = router;
