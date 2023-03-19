@@ -112,11 +112,6 @@ router.put("/", async (req, res) => {
   }
 });
 
-// let productBuyID = [
-//   "602cc6a5-cd2e-4384-ad84-b1039adb4575",
-//   "b48d333a-4c26-4593-a3b5-8a32aa11e2eb",
-// ];
-
 router.put("/buyProducts/:id", async (req, res) => {
   try {
     const userId = req.params.id;
