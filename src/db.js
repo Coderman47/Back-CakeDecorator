@@ -49,9 +49,10 @@ const { Course, User, Product } = sequelize.models;
 
 // Aca vendrian las relaciones
 
-User.belongsToMany(Course, { through: "userCourse" }, Product, {through: "productsUser"});
+User.belongsToMany(Course, { through: "userCourse" });
 Course.belongsToMany(User, { through: "userCourse" });
-Product.belongsToMany(User,{through: "productsUser"})
+User.belongsToMany(Product, { through: "products_user" });
+Product.belongsToMany(User, { through: "products_user" });
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');
