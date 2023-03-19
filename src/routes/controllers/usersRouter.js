@@ -6,7 +6,34 @@ const router = Router();
 
 router.get("/", async (req, res) => {
   try {
-    const users = await User.findAll();
+    const users = await User.findAll({
+      include: [
+        {
+          model: Product, //Codigo para generar los arreglos vacios e ir guardando la data relacionada entre modelos.
+          attributes: [
+            "name",
+            "description",
+            "stock",
+            "price",
+            "img",
+            "category",
+          ],
+        },
+        {
+          model: Course, //Codigo para generar los arreglos vacios e ir guardando la data relacionada entre modelos.
+          attributes: [
+            "title",
+            "description",
+            "videos",
+            "img",
+            "price",
+            "category",
+            "type",
+          ],
+        },
+      ],
+    });
+    // console.log("USERS", users[0].products[0])
     res.status(200).send(users);
   } catch (error) {
     console.log(error);
@@ -93,11 +120,8 @@ router.put("/", async (req, res) => {
 router.put("/buyProducts/:id", async (req, res) => {
   try {
     const userId = req.params.id;
-    const productsData = req.body;
-    // console.log("BODY", req.body);
+    const productsData = req.body; //Recibe un array de objetos con el ID de los productos seleccionados.
     const findUser = await User.findByPk(userId);
-    // console.log("USER", findUser);
-    // console.log("USER", findUser instanceof User)
     const productsArray = await Product.findAll();
 
     if (findUser) {
@@ -113,9 +137,6 @@ router.put("/buyProducts/:id", async (req, res) => {
           }
         }
       }
-      // FALTA INVESTIGAR PORQUE NO ME AGREGA EL ATRIBUTO EN
-      // USUARIOS Y PRODUCTO PARA VER LOS IDENTIFICADORES
-      // console.log("USUARIO FINAL", findUser);
       res.status(200).send("Articulos agregados al usuario!");
     } else {
       res.status(404).send(`No se encontró usuario con ID ${userId}`);
