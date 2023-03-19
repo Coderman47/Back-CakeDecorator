@@ -7,8 +7,8 @@ router.get("/", async (req, res) => {
   try {
     const products = await Product.findAll();
 
-    if (!products) {
-      res.status(404).send({ error: "No hay productos encontrados" });
+    if (products.length === 0) {
+      res.status(404).send("No hay productos encontrados");
     } else {
       res.status(200).send(products);
     }
@@ -69,9 +69,9 @@ router.delete("/deleteOne/:id", async (req, res) => {
       await Product.destroy({
         where: { id: finded.id },
       });
-      res.status(200).send("Producto eliminado correctamente");
+      res.status(200).send(`Producto con ID ${id} eliminado correctamente`);
     } else {
-      res.status(400).send("El producto con ese ID no se encontró");
+      res.status(400).send(`El producto con ID ${id} no se encontró`);
     }
   } catch (error) {
     res.status(404).json({ error: error.message });
