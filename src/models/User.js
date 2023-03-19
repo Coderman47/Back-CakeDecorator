@@ -34,10 +34,6 @@ module.exports = (sequelize) => {
         type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: false,
       },
-      productsUser: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
-        allowNull: false,
-      },
       img: {
         type: DataTypes.STRING,
         allowNull: true,
