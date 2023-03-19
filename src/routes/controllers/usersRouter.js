@@ -85,4 +85,12 @@ router.put("/", async (req, res) => {
   }
 });
 
+// let products = ["poner el ID del producto"]
+
+// router.put(("/buyProduct/:id", products), async (req, res) => {
+//   const idProduct = req.params.id
+
+
+    
+// });
 module.exports = router;

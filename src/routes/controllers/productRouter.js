@@ -34,7 +34,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/updateOne/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
   const id = req.params.id;
   const { name, description, stock, img, price, category } = req.body;
   try {
@@ -61,7 +61,7 @@ router.put("/updateOne/:id", async (req, res) => {
   }
 });
 
-router.delete("/deleteOne/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   const id = req.params.id;
   try {
     const finded = await Product.findByPk(id);
