@@ -1,7 +1,8 @@
 const { User, Product } = require("../../db");
-
 const { Router } = require("express");
 const { Course } = require("../../db");
+const transporter = require("../../utils/mailer");
+
 const router = Router();
 
 router.get("/", async (req, res) => {
@@ -80,6 +81,38 @@ router.post("/", async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(404).send(error);
+  }
+
+  //TODO: NODEMAILER ↓↓↓
+  // Estaría bueno pedir "genero" de la persona para saber como dirigir la escritura en el email
+  try {
+    const { email, name, surname } = req.body;
+    contentHTML = `
+    <h1>¡Bienvenida/o ${name}!</h1> 
+    <h2>Email: ${email}</h2>
+    <h3>🧁¡HOLA! ¿Cómo estás?🍰 Estoy muy contenta de que te hayas registrado en mi app. 
+    Pero debo pedirte que hagas un click en este link > dejar link < 
+    para terminar con el proceso de verfificación de tu cuenta.</h3>
+    `;
+    transporter.sendMail(
+      {
+        from: "<verificatucuenta@elmundodulce.com>", // sender address
+        to: email, // list of receivers
+        subject: "Verifica tu cuenta en El Mundo Dulce de Marite App✔️", // Subject line
+        // text: "Hello world?", // plain text body
+        html: contentHTML,
+        // html body
+      },
+      (err, info) => {
+        if (err) {
+          res.status(500).send(err.message);
+        }
+        res.status(200).json(info.envelope);
+      }
+    );
+    // console.log("INFO MAIL", info);
+  } catch (error) {
+    res.status(400).send(error.message);
   }
 });
 
