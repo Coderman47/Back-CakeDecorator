@@ -23,7 +23,7 @@ router.post("/", async (req, res) => {
     if (name && description && price && stock && img && category) {
       const createProduct = Product.create(req.body);
       res.status(200).send({
-        msg: `El producto ${name} fue creado satisfactoriamente`, 
+        msg: `El producto ${name} fue creado satisfactoriamente`,
       });
     } else {
       res.status(404).send({ error: "Faltan campos para crear producto" });
@@ -36,6 +36,7 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
   const id = req.params.id;
   const { name, description, stock, img, price, category } = req.body;
+  console.log("RUTA INDICADA");
   try {
     const findProduct = await Product.findOne({ where: { id: id } });
 

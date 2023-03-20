@@ -115,24 +115,19 @@ router.put("/", async (req, res) => {
 router.put("/buyProducts/:id", async (req, res) => {
   try {
     const userId = req.params.id;
-    const productsData = req.body; //Recibe un array de objetos con el ID de los productos seleccionados.
+    const productsIds = req.body; //Recibe un array de objetos con el ID de los productos seleccionados.
     const findUser = await User.findByPk(userId);
-    const productsArray = await Product.findAll();
 
     if (findUser) {
-      for (let i = 0; i < productsArray.length; i++) {
-        for (let j = 0; j < productsData.length; j++) {
-          if (productsArray[i].id === req.body[j].id) {
-            const [product, setProduct] = await Product.findOrCreate({
-              where: {
-                id: productsData[j].id,
-              },
-            });
-            product.addUser(findUser);
-          }
-        }
+      if (productsIds.length > 0) {
+        const productsToAdd = await Product.findAll({
+          where: { id: productsIds },
+        });
+        await findUser.addProduct(productsToAdd);
+        res.status(200).send("Articulos agregados al usuario!");
+      } else {
+        res.status(404).send(`Falta el ID del producto para relacionarlo`);
       }
-      res.status(200).send("Articulos agregados al usuario!");
     } else {
       res.status(404).send(`No se encontró usuario con ID ${userId}`);
     }
