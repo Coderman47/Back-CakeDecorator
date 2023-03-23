@@ -3,6 +3,7 @@ const { Router } = require("express");
 const { Course } = require("../../db");
 const router = Router();
 const { sendMessageMail } = require("../../utils/mailer");
+const bcryptjs = require("bcryptjs");
 
 router.get("/", async (req, res) => {
   try {
@@ -53,15 +54,16 @@ router.get("/userId", async (req, res) => {
     res.status(404).send(error);
   }
 });
-router.post("/userEmail", async (req, res) => {
+router.get("/userEmail", async (req, res) => {
   try {
     //? Esta ruta es para preguntar a la DB si existe un usuario con el email con el que estan intentando ingresar
+    const email = req.query.email;
     const user = await User.findOne({
-      where: { email: req.body.userEmail },
+      where: { email },
       // include: [{ model: Course }],
     });
     // console.log("FIND USER: ", user);
-    user !== null ? res.status(200).send(true) : res.status(200).send(false);
+    user !== null ? res.status(200).send(user) : res.status(200).send(false);
   } catch (error) {
     console.log(error);
     res.status(404).send(error);
@@ -72,7 +74,8 @@ router.post("/", async (req, res) => {
   try {
     const { name, surname, email, password, role, status } = req.body;
     if (name && surname && email && password && role && status) {
-      const newUser = await User.create(req.body);
+      const pwHash = await bcryptjs.hash(password, 11);
+      const newUser = await User.create({ ...req.body, password: pwHash });
       res.status(200).send(newUser);
     } else {
       throw Error("Falta algun dato para la creación del usuario");
@@ -85,6 +88,7 @@ router.post("/", async (req, res) => {
   // Solicitarle "genero" a la persona para saber como usar los pronombres dentro del email.
   // Enviarle un link de verificacion de cuenta al usuario.
   try {
+    console.log("HOLA NODE MAILER");
     const { email, name, surname } = req.body;
     await sendMessageMail(email, name)
       .then((result) => res.status(200).send(result))
