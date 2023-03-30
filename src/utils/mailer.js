@@ -10,19 +10,17 @@ const oAuth2Client = new google.auth.OAuth2(
 
 oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
 
-async function sendMessageMail(email, name) {
+async function sendMessageMail(email, name, verifyLink) {
   const contentHTML = `
-                <h1>¡Bienvenida ${name}!</h1> 
-                <h2>🧁¡Hola!¿Cómo estás?🍰</h2>
-<p>
-Estoy muy contenta de que te hayas registrado en mi app!. 
-Solamente debo pedirte que hagas click en este link >dejar-link< 
-para finalizar el proceso de verfificación de tu cuenta.
-</p>
+  <h1>¡Bienvenida ${name}!</h1> 
+  <h2>🧁¿Cómo estás?🍰</h2>
+  <h3>
+  ¡Estoy muy contenta de que te hayas registrado en mi aplicación!
+  Solo te falta un paso: <a href=${verifyLink}>VERIFICAR CUENTA</a>
+  </h3>
   `;
   try {
     const accessToken = await oAuth2Client.getAccessToken();
-    // console.log("TOKEN USER",accessToken)
     const transporter = nodemailer.createTransport({
       service: "gmail",
       port: 587,
@@ -37,12 +35,12 @@ para finalizar el proceso de verfificación de tu cuenta.
       },
     });
     const mailOptions = {
-      from: '"Remitente" <elmundodulcenotificaciones@gmail.com>',
+      from: '"¡ULTIMO PASO!" <elmundodulcenotificaciones@gmail.com>',
       to: email,
       subject: "Verifica tu cuenta en El Mundo Dulce de Marite App✔️",
       html: contentHTML,
     };
-    const finalResult = await transporter.sendMail(
+    const finalResult = transporter.sendMail(
       //TRANSPORT DATA
       mailOptions,
       (err, info) => {

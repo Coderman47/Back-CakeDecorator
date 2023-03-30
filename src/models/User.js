@@ -21,6 +21,7 @@ module.exports = (sequelize) => {
       email: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
       },
       password: {
         type: DataTypes.STRING,
@@ -39,7 +40,7 @@ module.exports = (sequelize) => {
         allowNull: false,
       },
       status: {
-        type: DataTypes.ENUM("active", "banned"),
+        type: DataTypes.ENUM("active", "banned", "inactive"),
         allowNull: false,
       },
     },
