@@ -77,6 +77,14 @@ router.post("/", async (req, res) => {
       const pwHash = await bcryptjs.hash(password, 11);
       const newUser = await User.create({ ...req.body, password: pwHash });
       res.status(200).send(newUser);
+      try {
+        const { email, name, verifyLink } = req.body;
+        await sendMessageMail(email, name, verifyLink)
+          .then((result) => res.status(200).send(result))
+          .catch((error) => console.log(error.message));
+      } catch (error) {
+        res.status(400).send(error.message);
+      }
     } else {
       throw Error("Falta algun dato para la creación del usuario");
     }
@@ -84,18 +92,10 @@ router.post("/", async (req, res) => {
     console.log(error);
     res.status(404).send(error);
   }
+
   //TODO: NODEMAILER ↓↓↓
   // Solicitarle "genero" a la persona para saber como usar los pronombres dentro del email.
   // Enviarle un link de verificacion de cuenta al usuario.
-  try {
-    console.log("HOLA NODE MAILER");
-    const { email, name, surname } = req.body;
-    await sendMessageMail(email, name)
-      .then((result) => res.status(200).send(result))
-      .catch((error) => console.log(error.message));
-  } catch (error) {
-    res.status(400).send(error.message);
-  }
 });
 
 router.put("/", async (req, res) => {
