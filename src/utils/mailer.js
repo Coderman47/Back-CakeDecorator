@@ -1,5 +1,6 @@
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
+const { HOST_BACK } = require("./index")
 require("dotenv");
 
 const oAuth2Client = new google.auth.OAuth2(
@@ -12,17 +13,17 @@ oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
 
 async function sendMessageMail(email, name, verifyLink) {
   const contentHTML = `
-  <h1>¡Bienvenida ${name}!</h1> 
-  <h2>🧁¿Cómo estás?🍰</h2>
-  <h3>
-  ¡Estoy muy contenta de que te hayas registrado en mi aplicación!
-  Solo te falta un paso: <a href=${verifyLink}>VERIFICAR CUENTA</a>
+  <h1 align="center">¡Bienvenido/a ${name}!</h1> 
+  <h2 align="center">🧁¿Cómo te va?🍰</h2>
+  <h3 align="center">
+  ¡Estoy muy pero muy contenta de que te hayas registrado en mi aplicación!
   </h3>
+  <h3 align="center">SOLO TE FALTA UN PASO MÁS <a href=${HOST_BACK}/users/verifyAccount?id=${verifyLink}><button>👉VERIFICAR CUENTA👈<button></a></h3>
   `;
   try {
     const accessToken = await oAuth2Client.getAccessToken();
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      service: "gmail, outlook",
       port: 587,
       secure: false, // true solo para 465, false para los demas puertos
       auth: {
@@ -35,7 +36,7 @@ async function sendMessageMail(email, name, verifyLink) {
       },
     });
     const mailOptions = {
-      from: '"¡ULTIMO PASO!" <elmundodulcenotificaciones@gmail.com>',
+      from: '"¡ÚLTIMO PASO!" <elmundodulcenotificaciones@gmail.com>',
       to: email,
       subject: "Verifica tu cuenta en El Mundo Dulce de Marite App✔️",
       html: contentHTML,
@@ -44,7 +45,7 @@ async function sendMessageMail(email, name, verifyLink) {
       //TRANSPORT DATA
       mailOptions,
       (err, info) => {
-        err ? console.log(err) : console.log(info.messageId);
+        err ? console.log("ERROR MAILER",err) : console.log("INFO MAILER",info.messageId);
       }
     );
     return finalResult;
