@@ -4,6 +4,7 @@ const { Course } = require("../../db");
 const router = Router();
 const { sendMessageMail } = require("../../utils/mailer");
 const bcryptjs = require("bcryptjs");
+const { HOST_FRONT } = require("../../utils/index");
 
 router.get("/", async (req, res) => {
   try {
@@ -70,6 +71,22 @@ router.get("/userEmail", async (req, res) => {
   }
 });
 
+router.get("/verifyAccount", async (req, res) => {
+  const userId = req.query.id;
+  const findUser = await User.findByPk(userId);
+  if (findUser) {
+    const updateStatus = await findUser.update({ status: "active" });
+    res.status(200).send(`
+    <h2 align="center">¡Tu cuenta se ha verificado correctamente, muchas gracias!👍</h2>
+    <font size="6">
+    <center>
+    <a href=${HOST_FRONT}/>Ir al inicio del Mundo Dulce de Marite</a>
+    </center>
+    </font>
+    `);
+  }
+});
+
 router.post("/", async (req, res) => {
   try {
     const { name, surname, email, password, role, status } = req.body;
@@ -78,7 +95,8 @@ router.post("/", async (req, res) => {
       const newUser = await User.create({ ...req.body, password: pwHash });
       res.status(200).send(newUser);
       try {
-        const { email, name, verifyLink } = req.body;
+        const { email, name } = req.body;
+        const verifyLink = newUser["dataValues"].id;
         await sendMessageMail(email, name, verifyLink)
           .then((result) => res.status(200).send(result))
           .catch((error) => console.log(error.message));
@@ -92,10 +110,6 @@ router.post("/", async (req, res) => {
     console.log(error);
     res.status(404).send(error);
   }
-
-  //TODO: NODEMAILER ↓↓↓
-  // Solicitarle "genero" a la persona para saber como usar los pronombres dentro del email.
-  // Enviarle un link de verificacion de cuenta al usuario.
 });
 
 router.put("/", async (req, res) => {
