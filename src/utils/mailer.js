@@ -54,12 +54,12 @@ async function sendMessageMail(email, name, verifyLink) {
   }
 }
 
-async function sendMailToRecoveryPass(email, name){
-    console.log("EMAIL",email)
+async function sendMailToRecoveryPass({email, name, id}){
+    // console.log("EMAIL",{email, name})
     const contentHTML = `
   <h1 align="center">¡Hola ${name}!👋</h1> 
   <h2 align="center">Sigue este enlace para generar una nueva contraseña y no perder tu cuenta</h2>
-  <h3 align="center"><a href=${HOST_FRONT}/generateNewPass>💥HAZ CLICK AQUÍ💥</a></h3>
+  <h3 align="center"><a href=${HOST_FRONT}/generateNewPass/${id}>💥HAZ CLICK AQUÍ💥</a></h3>
   `;
   try {
     const accessToken = await oAuth2Client.getAccessToken();
