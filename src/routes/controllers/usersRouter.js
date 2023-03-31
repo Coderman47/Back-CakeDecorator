@@ -114,26 +114,16 @@ router.post("/", async (req, res) => {
 
 router.put("/", async (req, res) => {
   try {
-    //? ESTA RUTA TIENE 2 CAMINOS, SI POR BODY ME LLEGA LA PROP "addCourse" HACE ES LO SIGUIENTE:
-    console.log("addCourse: ", req.body.addCourse);
-    if (req.body.addCourse === true) {
-      //? ↓↓ BUSCO AL USUARIO QUE HAY QUE MODIFICAR
-      const userToAddCourses = await User.findByPk(req.query.userId);
-      //? ↓↓ TMB ME LLEGA UNA PROPIEDAD "coursesIds" CON LA CUAL BUSCO Y GUARDO LOS CURSOS QUE HAY QUE AGREGARLE AL USER
-      const coursesToAdd = await Course.findAll({
-        where: { id: req.body.coursesIds },
-      });
-
-      await userToAddCourses.addCourse(coursesToAdd);
-      res.status(200).send(userToAddCourses);
-    } else {
-      //? ESTE ES EL CAMINO EN EL QUE SOLO SE MODIFICA AL USUARIO POR PETICION DEL MISMO, POR INFO PERSONAL
+    const { userId } = req.query;
+    if (userId) {
       const userUpdated = await User.update(req.body, {
         where: { id: req.query.userId },
       });
       userUpdated[0] === 1
         ? res.status(200).send(userUpdated)
         : res.status(404).send("No hay usuario con ese ID");
+    } else {
+      res.status(404).send({ msg: "Falta el ID del usuario para modificarlo" });
     }
   } catch (error) {
     console.log(error);
