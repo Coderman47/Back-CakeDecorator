@@ -64,7 +64,7 @@ router.get("/userEmail", async (req, res) => {
       // include: [{ model: Course }],
     });
     // console.log("FIND USER: ", user);
-    user !== null ? res.status(200).send(user) : res.status(200).send(false);
+    user !== null ? res.status(200).send(user) : res.status(404).send(false);
   } catch (error) {
     console.log(error);
     res.status(404).send(error);
