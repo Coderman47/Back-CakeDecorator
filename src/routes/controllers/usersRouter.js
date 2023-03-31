@@ -2,7 +2,10 @@ const { User, Product } = require("../../db");
 const { Router } = require("express");
 const { Course } = require("../../db");
 const router = Router();
-const { sendMessageMail, sendMailToRecoveryPass } = require("../../utils/mailer");
+const {
+  sendMessageMail,
+  sendMailToRecoveryPass,
+} = require("../../utils/mailer");
 const bcryptjs = require("bcryptjs");
 const { HOST_FRONT } = require("../../utils/index");
 
@@ -68,6 +71,31 @@ router.get("/userEmail", async (req, res) => {
     console.log(error);
     res.status(404).send(error);
   }
+});
+
+router.get("/forgotPassword", async (req, res) => {
+  try {
+    const email = req.query.email;
+    console.log("EMAIL", email)
+    const user = await User.findOne({
+      where: { email },
+    });
+    if (user) {
+      await sendMailToRecoveryPass(user);
+    } else {
+      throw new Error("No se encontró usuario en la DB con ese mail");
+    }
+  } catch (error) {
+    res.status(404).send(error.message);
+  }
+});
+
+router.put("/updateUserPass", async (req, res) => {
+  const { newPassword, id } = req.body;
+  const pwHash = await bcryptjs.hash(newPassword, 11);
+  const findUser = await User.findByPk(id);
+  await findUser.update({ password: pwHash });
+  console.log(findUser)
 });
 
 router.get("/verifyAccount", async (req, res) => {
