@@ -2,7 +2,7 @@ const { User, Product } = require("../../db");
 const { Router } = require("express");
 const { Course } = require("../../db");
 const router = Router();
-const { sendMessageMail } = require("../../utils/mailer");
+const { sendMessageMail, sendMailToRecoveryPass } = require("../../utils/mailer");
 const bcryptjs = require("bcryptjs");
 const { HOST_FRONT } = require("../../utils/index");
 
@@ -63,8 +63,7 @@ router.get("/userEmail", async (req, res) => {
       where: { email },
       // include: [{ model: Course }],
     });
-    // console.log("FIND USER: ", user);
-    user !== null ? res.status(200).send(user) : res.status(404).send(false);
+    user !== null ? res.status(200).send(user) : res.status(200).send(false);
   } catch (error) {
     console.log(error);
     res.status(404).send(error);
