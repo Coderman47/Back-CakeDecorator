@@ -172,6 +172,36 @@ router.put("/", async (req, res) => {
   }
 });
 
+router.get("/getUserQuery", async (req, res) => {
+  try {
+    const getUserInfo = await User.findByPk(req.query.id);
+    if (getUserInfo) {
+      res.status(200).send(getUserInfo);
+    } else {
+      res.status(404).send("No se encontró usuario con dicho ID");
+    }
+  } catch (error) {
+    res.status(404).send("Algo salió mal");
+  }
+});
+
+router.put("/updateMyAccount", async (req, res) => {
+  try {
+    if (req.query.id) {
+      const findUser = await User.findByPk(req.query.id);
+      if (findUser) {
+        const userUpdated = await findUser.update(req.body);
+        res.status(200).send(userUpdated);
+      }
+    } else {
+      res.status(404).send("Usuario no encontrado con ese ID");
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(404).send(error);
+  }
+});
+
 router.put("/buyProducts/:id", async (req, res) => {
   try {
     const userId = req.params.id;
