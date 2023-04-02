@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
     const users = await User.findAll({
       include: [
         {
-          model: Product, //Codigo para generar los arreglos vacios e ir guardando la data relacionada entre modelos.
+          model: Product,
           attributes: [
             "name",
             "description",
@@ -25,7 +25,7 @@ router.get("/", async (req, res) => {
           ],
         },
         {
-          model: Course, //Codigo para generar los arreglos vacios e ir guardando la data relacionada entre modelos.
+          model: Course,
           attributes: [
             "title",
             "description",
@@ -38,7 +38,6 @@ router.get("/", async (req, res) => {
         },
       ],
     });
-    // console.log("USERS", users[0].products[0])
     res.status(200).send(users);
   } catch (error) {
     console.log(error);
@@ -76,41 +75,56 @@ router.get("/userEmail", async (req, res) => {
 router.get("/forgotPassword", async (req, res) => {
   try {
     const email = req.query.email;
-    console.log("EMAIL", email)
     const user = await User.findOne({
       where: { email },
     });
     if (user) {
       await sendMailToRecoveryPass(user);
+      res.status(200).send(user);
     } else {
-      throw new Error("No se encontró usuario en la DB con ese mail");
+      console.log("No tengo a ese usuario en la DB");
+      res.status(200).send();
+    }
+  } catch (error) {
+    res.status(404).json(`${error.message}`);
+  }
+});
+
+router.put("/updateUserPass", async (req, res) => {
+  try {
+    const { newPassword, id } = req.body;
+    const pwHash = await bcryptjs.hash(newPassword, 11);
+    const findUser = await User.findByPk(id);
+    if (findUser && pwHash.length > 20) {
+      await findUser.update({ password: pwHash });
+      res.status(200).send(findUser);
+    } else {
+      throw new Error("Algo salió mal");
     }
   } catch (error) {
     res.status(404).send(error.message);
   }
 });
 
-router.put("/updateUserPass", async (req, res) => {
-  const { newPassword, id } = req.body;
-  const pwHash = await bcryptjs.hash(newPassword, 11);
-  const findUser = await User.findByPk(id);
-  await findUser.update({ password: pwHash });
-  console.log(findUser)
-});
-
 router.get("/verifyAccount", async (req, res) => {
-  const userId = req.query.id;
-  const findUser = await User.findByPk(userId);
-  if (findUser) {
-    const updateStatus = await findUser.update({ status: "active" });
-    res.status(200).send(`
-    <h2 align="center">¡Tu cuenta se ha verificado correctamente, muchas gracias!👍</h2>
-    <font size="6">
-    <center>
-    <a href=${HOST_FRONT}/>Ir al inicio del Mundo Dulce de Marite</a>
-    </center>
-    </font>
-    `);
+  try {
+    const userId = req.query.id;
+    const findUser = await User.findByPk(userId);
+    if (findUser) {
+      await findUser.update({ status: "active" });
+      res.status(200).send(`
+      <h2 align="center">¡Tu cuenta se ha verificado correctamente, muchas gracias!👍</h2>
+      <font size="6">
+      <center>
+      <a href=${HOST_FRONT}/>Ir al inicio del Mundo Dulce de Marite</a>
+      </center>
+      </font>
+      `);
+    } else {
+      res.status(404).send("Ups! Algo salio mal");
+    }
+  } catch (error) {
+    res.status(404).send(error.message);
   }
 });
 
