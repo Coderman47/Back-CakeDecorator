@@ -13,6 +13,36 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/getUserCourses", async (req, res) => {
+  try {
+    const userId = req.query.id;
+    if (userId) {
+      const userInfo = await User.findByPk(userId, {
+        include: [
+          {
+            model: Course,
+            attributes: [
+              "title",
+              "description",
+              "videos",
+              "img",
+              "price",
+              "category",
+              "type",
+            ],
+          },
+        ],
+      });
+      const courses = userInfo.dataValues.courses;
+      res.status(200).send(courses);
+    } else {
+      res.status(404).send("No hay usuario del ID para buscar sus cursos");
+    }
+  } catch (error) {
+    res.status(404).send(error.message);
+  }
+});
+
 router.get("/id", async (req, res) => {
   try {
     const courses = await Course.findByPk(req.query.id);
