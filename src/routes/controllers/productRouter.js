@@ -17,32 +17,60 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/getUserProducts", async(req, res)=> {
+router.get("/getByName", async (req, res) => {
   try {
-    const findUser = await User.findByPk(req.query.id, {
-      include:[
-        {
-          model: Product,
-          attributes: [
-            "name",
-            "price",
-            "description",
-            "img"
-          ]
-        }
-      ]
-    })
-    if(findUser){
-      const products = findUser.dataValues.products
-      res.status(200).send(products)
-    }else{
-      res.status(404).send("Usuario no encontrado")
+    const input = req.query;
+    const inputLowerCase = input.name.toLowerCase();
+    // console.log("INPUT", inputLowerCase)
+    const searched = [];
+    const allProducts = await Product.findAll();
+    const findByName = allProducts.map((product) => {
+      const name = product.dataValues.name.toLowerCase();
+      if (name.indexOf(inputLowerCase) !== -1) {
+        searched.push(product);
+      }
+    });
+    res.status(200).send(searched);
+  } catch (error) {
+    res.status(404).send(error.message);
+  }
+});
+
+router.get("/findOne/:id", async (req, res) => {
+  console.log(req.params.id);
+  try {
+    if (req.params.id) {
+      const getProduct = await Product.findByPk(req.params.id);
+
+      res.status(200).send(getProduct);
+    } else {
+      res.status(404).send("No hay ID del producto");
     }
   } catch (error) {
-    res.status(404).send(error.message)
+    res.status(404).send(error.message);
   }
-  
-})
+});
+
+router.get("/getUserProducts", async (req, res) => {
+  try {
+    const findUser = await User.findByPk(req.query.id, {
+      include: [
+        {
+          model: Product,
+          attributes: ["name", "price", "description", "img", "category"],
+        },
+      ],
+    });
+    if (findUser) {
+      const products = findUser.dataValues.products;
+      res.status(200).send(products);
+    } else {
+      res.status(404).send("Usuario no encontrado");
+    }
+  } catch (error) {
+    res.status(404).send(error.message);
+  }
+});
 
 router.post("/", async (req, res) => {
   try {
@@ -87,7 +115,6 @@ router.put("/:id", async (req, res) => {
     res.status(404).json({ error: error.message });
   }
 });
-
 
 router.put("/buyProducts/:id", async (req, res) => {
   try {
