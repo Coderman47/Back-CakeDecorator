@@ -17,25 +17,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/getByName", async (req, res) => {
-  try {
-    const input = req.query;
-    const inputLowerCase = input.name.toLowerCase();
-    // console.log("INPUT", inputLowerCase)
-    const searched = [];
-    const allProducts = await Product.findAll();
-    const findByName = allProducts.map((product) => {
-      const name = product.dataValues.name.toLowerCase();
-      if (name.indexOf(inputLowerCase) !== -1) {
-        searched.push(product);
-      }
-    });
-    res.status(200).send(searched);
-  } catch (error) {
-    res.status(404).send(error.message);
-  }
-});
-
 router.get("/findOne/:id", async (req, res) => {
   console.log(req.params.id);
   try {
