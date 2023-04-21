@@ -11,16 +11,20 @@ module.exports = (sequelize) => {
         defaultValue: UUIDV4,
       },
       name: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(120),
         allowNull: false,
       },
       price: {
-        type: DataTypes.FLOAT,
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       category: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(50),
         allowNull: false,
+      },
+      brand: {
+        type: DataTypes.STRING(50),
+        allowNull: true,
       },
       description: {
         type: DataTypes.TEXT,
