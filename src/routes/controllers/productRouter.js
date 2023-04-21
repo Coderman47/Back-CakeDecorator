@@ -56,6 +56,7 @@ router.get("/getUserProducts", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const { name, description, price, stock, img, category } = req.body;
+    console.log("PRICE: ", price);
     if (name && description && price && stock && img && category) {
       const createProduct = Product.create(req.body);
       res.status(200).send({
