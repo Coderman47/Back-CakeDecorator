@@ -10,9 +10,10 @@ module.exports = (sequelize) => {
         primaryKey: true,
         defaultValue: UUIDV4,
       },
-      name: {
+      brand: {
         type: DataTypes.STRING(50),
         allowNull: false,
+        unique: true,
       },
     },
     {
