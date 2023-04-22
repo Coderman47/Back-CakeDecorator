@@ -18,8 +18,8 @@ module.exports = (sequelize) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      category: {
-        type: DataTypes.STRING(50),
+      categories: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: false,
       },
       brand: {

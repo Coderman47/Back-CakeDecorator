@@ -55,9 +55,9 @@ router.get("/getUserProducts", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const { name, description, price, stock, img, category } = req.body;
+    const { name, description, price, stock, img, categories } = req.body;
     console.log("PRICE: ", price);
-    if (name && description && price && stock && img && category) {
+    if (name && description && price && stock && img && categories) {
       const createProduct = Product.create(req.body);
       res.status(200).send({
         msg: `El producto ${name} fue creado satisfactoriamente`,
@@ -72,7 +72,8 @@ router.post("/", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   const id = req.params.id;
-  const { name, description, stock, img, price, category } = req.body;
+  console.log("RUTA PUT: ", req.body);
+  const { name, description, stock, img, price, categories, brand } = req.body;
   console.log("RUTA INDICADA");
   try {
     const findProduct = await Product.findOne({ where: { id: id } });
@@ -86,7 +87,8 @@ router.put("/:id", async (req, res) => {
       stock,
       img,
       price,
-      category,
+      categories,
+      brand,
     });
     if (newProduct) {
       res.status(200).send(newProduct);
