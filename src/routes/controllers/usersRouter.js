@@ -11,6 +11,7 @@ const { HOST_FRONT } = require("../../utils/index");
 
 router.get("/", async (req, res) => {
   try {
+    console.log("RUTA GET USERS!");
     const users = await User.findAll({
       include: [
         {
@@ -21,7 +22,7 @@ router.get("/", async (req, res) => {
             "stock",
             "price",
             "img",
-            "category",
+            "categories",
           ],
         },
         {
@@ -201,6 +202,5 @@ router.put("/updateMyAccount", async (req, res) => {
     res.status(404).send(error);
   }
 });
-
 
 module.exports = router;
