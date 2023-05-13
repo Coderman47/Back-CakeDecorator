@@ -51,7 +51,6 @@ router.get("/userId", async (req, res) => {
     const user = await User.findByPk(req.body.userId, {
       include: [{ model: Course }],
     });
-    // console.log("USER: ", user);
     res.status(200).send(user);
   } catch (error) {
     console.log(error);
@@ -186,7 +185,7 @@ router.get("/getUserQuery", async (req, res) => {
   }
 });
 
-router.put("/updateMyAccount", async (req, res) => {
+router.put("/updateMyAccountInfo", async (req, res) => {
   try {
     if (req.query.id) {
       const findUser = await User.findByPk(req.query.id);
