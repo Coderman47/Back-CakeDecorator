@@ -19,8 +19,8 @@ module.exports = (sequelize) => {
         allowNull: false,
       },
       videos: {
+        allowNull: true,
         type: DataTypes.ARRAY(DataTypes.STRING),
-        allowNull: false,
       },
       img: {
         type: DataTypes.TEXT,
@@ -34,8 +34,16 @@ module.exports = (sequelize) => {
         type: DataTypes.ENUM("Seminario", "Curso"),
       },
       type: {
-        type: DataTypes.ENUM("Presencial", "Online", "Hibrido"),
+        type: DataTypes.ENUM("Presencial", "Grabado"),
         allowNull: false,
+      },
+      duration: {
+        type: DataTypes.STRING(30),
+        allowNull: false,
+      },
+      startDate: {
+        type: DataTypes.STRING(30),
+        allowNull: true,
       },
       // rating: {
       //   type: DataTypes.INTEGER,
@@ -44,11 +52,6 @@ module.exports = (sequelize) => {
       //     min: 1,
       //     max: 5,
       //   },
-      // },
-
-      // level: {
-      //   type: DataTypes.ENUM("Principiante", "Intermedio", "Avanzado"),
-      //   allowNull: false,
       // },
     },
     {
