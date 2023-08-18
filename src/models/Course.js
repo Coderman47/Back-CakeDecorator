@@ -45,6 +45,10 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING(30),
         allowNull: true,
       },
+      learnDescriptions: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        allowNull: false,
+      },
       // rating: {
       //   type: DataTypes.INTEGER,
       //   allowNull: true,
