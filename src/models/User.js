@@ -1,4 +1,4 @@
-const { DataTypes, UUIDV4, STRING } = require("sequelize");
+const { DataTypes, UUIDV4, DATE, Sequelize } = require("sequelize");
 
 module.exports = (sequelize) => {
   sequelize.define(
@@ -42,6 +42,9 @@ module.exports = (sequelize) => {
       status: {
         type: DataTypes.ENUM("active", "banned", "inactive"),
         allowNull: false,
+      },
+      registerDate: {
+        type: DATE,
       },
     },
     {

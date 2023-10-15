@@ -45,6 +45,21 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING(30),
         allowNull: true,
       },
+      limit: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          max: {
+            args: 40,
+            msg: "El número máximo permitido es 40.",
+          },
+        },
+      },
+      currentStudents: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
       learnDescriptions: {
         type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: false,

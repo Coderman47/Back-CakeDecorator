@@ -5,6 +5,7 @@ const coursesRouter = require("./controllers/coursesRouter");
 const productRouter = require("./controllers/productRouter");
 const productsCategoriesRouter = require("./controllers/productsCategories");
 const brandsRouter = require("./controllers/productsBrands");
+
 //importar todos los controllers
 
 //configurar los routers
