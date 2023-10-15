@@ -56,9 +56,27 @@ router.get("/id", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const { title, description, duration, videos, img, price, category, type } =
-      req.body;
-    if (title && description && duration && img && price && category && type) {
+    const {
+      title,
+      description,
+      duration,
+      videos,
+      img,
+      price,
+      category,
+      type,
+      limit,
+    } = req.body;
+    if (
+      title &&
+      description &&
+      duration &&
+      img &&
+      price &&
+      category &&
+      type &&
+      limit
+    ) {
       const newCourse = await Course.create(req.body);
       res.status(200).send({
         msg: `${category} del tipo ${type} creado con éxito`,

@@ -72,9 +72,7 @@ router.post("/", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   const id = req.params.id;
-  console.log("RUTA PUT: ", req.body);
   const { name, description, stock, img, price, categories, brand } = req.body;
-  console.log("RUTA INDICADA");
   try {
     const findProduct = await Product.findOne({ where: { id: id } });
 

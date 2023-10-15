@@ -11,7 +11,6 @@ const { HOST_FRONT } = require("../../utils/index");
 
 router.get("/", async (req, res) => {
   try {
-    console.log("RUTA GET USERS!");
     const users = await User.findAll({
       include: [
         {
@@ -133,6 +132,7 @@ router.post("/", async (req, res) => {
   try {
     const { name, surname, email, password, role, status } = req.body;
     if (name && surname && email && password && role && status) {
+      req.body.registerDate = new Date();
       const pwHash = await bcryptjs.hash(password, 11);
       const newUser = await User.create({ ...req.body, password: pwHash });
       res.status(200).send(newUser);
@@ -197,6 +197,15 @@ router.put("/updateMyAccount", async (req, res) => {
     } else {
       res.status(404).send("Usuario no encontrado con ese ID");
     }
+  } catch (error) {
+    console.log(error);
+    res.status(404).send(error);
+  }
+});
+
+router.get("/usersStats", async (req, res) => {
+  try {
+    let allUsers = await User.findAll();
   } catch (error) {
     console.log(error);
     res.status(404).send(error);
