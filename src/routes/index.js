@@ -5,6 +5,7 @@ const coursesRouter = require("./controllers/coursesRouter");
 const productRouter = require("./controllers/productRouter");
 const productsCategoriesRouter = require("./controllers/productsCategories");
 const brandsRouter = require("./controllers/productsBrands");
+const ordersRouter = require("./controllers/orderRouter");
 
 //importar todos los controllers
 
@@ -15,5 +16,6 @@ router.use("/courses", coursesRouter);
 router.use("/products", productRouter);
 router.use("/categories", productsCategoriesRouter);
 router.use("/brands", brandsRouter);
+router.use("/orders", ordersRouter);
 
 module.exports = router;
