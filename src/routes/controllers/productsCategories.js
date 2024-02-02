@@ -40,7 +40,7 @@ router.post("/", async (req, res) => {
 router.delete("/", async (req, res) => {
   try {
     const { id } = req.query;
-    console.log("REQ- QUERY", req.query);
+    // console.log("REQ- QUERY", req.query);
     const isUUID = validator.isUUID(id);
     if (!id || !isUUID) {
       res

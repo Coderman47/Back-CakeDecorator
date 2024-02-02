@@ -175,6 +175,7 @@ router.put("/", async (req, res) => {
 router.get("/getUserQuery", async (req, res) => {
   try {
     const getUserInfo = await User.findByPk(req.query.id);
+    console.log("USER INFO: ", getUserInfo);
     if (getUserInfo) {
       res.status(200).send(getUserInfo);
     } else {
@@ -187,6 +188,8 @@ router.get("/getUserQuery", async (req, res) => {
 
 router.put("/updateMyAccountInfo", async (req, res) => {
   try {
+    console.log("req.body: ", req.body);
+    console.log("req.query.id", req.query.id);
     if (req.query.id) {
       const findUser = await User.findByPk(req.query.id);
       if (findUser) {
