@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
-const { HOST_BACK, HOST_FRONT } = require("./index")
+const { HOST_BACK, HOST_FRONT } = require("./index");
 require("dotenv");
 
 const oAuth2Client = new google.auth.OAuth2(
@@ -23,7 +23,7 @@ async function sendMessageMail(email, name, verifyLink) {
   try {
     const accessToken = await oAuth2Client.getAccessToken();
     const transporter = nodemailer.createTransport({
-      service: "gmail", 
+      service: "gmail",
       port: 587,
       secure: false, // true solo para 465, false para los demas puertos
       auth: {
@@ -45,7 +45,9 @@ async function sendMessageMail(email, name, verifyLink) {
       //TRANSPORT DATA
       mailOptions,
       (err, info) => {
-        err ? console.log("ERROR MAILER",err) : console.log("INFO MAILER",info.messageId);
+        err
+          ? console.log("ERROR MAILER", err)
+          : console.log("INFO MAILER", info.messageId);
       }
     );
     return finalResult;
@@ -54,9 +56,9 @@ async function sendMessageMail(email, name, verifyLink) {
   }
 }
 
-async function sendMailToRecoveryPass({email, name, id}){
-    // console.log("EMAIL",{email, name})
-    const contentHTML = `
+async function sendMailToRecoveryPass({ email, name, id }) {
+  // console.log("EMAIL",{email, name})
+  const contentHTML = `
   <h1 align="center">¡Hola ${name}!👋</h1> 
   <h2 align="center">Sigue este enlace para generar una nueva contraseña y no perder tu cuenta</h2>
   <h3 align="center"><a href=${HOST_FRONT}/generateNewPass/${id}>💥HAZ CLICK AQUÍ💥</a></h3>
@@ -64,7 +66,7 @@ async function sendMailToRecoveryPass({email, name, id}){
   try {
     const accessToken = await oAuth2Client.getAccessToken();
     const transporter = nodemailer.createTransport({
-      service: "gmail", 
+      service: "gmail",
       port: 587,
       secure: false, // true solo para 465, false para los demas puertos
       auth: {
@@ -86,7 +88,9 @@ async function sendMailToRecoveryPass({email, name, id}){
       //TRANSPORT DATA
       mailOptions,
       (err, info) => {
-        err ? console.log("ERROR MAILER",err) : console.log("INFO MAILER",info.messageId);
+        err
+          ? console.log("ERROR MAILER", err)
+          : console.log("INFO MAILER", info.messageId);
       }
     );
     return finalResult;
@@ -97,5 +101,5 @@ async function sendMailToRecoveryPass({email, name, id}){
 
 module.exports = {
   sendMessageMail,
-  sendMailToRecoveryPass
+  sendMailToRecoveryPass,
 };
